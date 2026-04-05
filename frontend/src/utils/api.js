@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Use relative path so Vite proxy handles the request
+// Use env variable or fallback to relative path (local proxy)
 const api = axios.create({
-    baseURL: '/api',
+    baseURL: import.meta.env.VITE_API_URL || '/api',
     headers: {
         'Content-Type': 'application/json',
     },
