@@ -84,37 +84,58 @@ const IssueTracker = () => {
     };
 
 
+    // shared select style
+    const selSt = {
+        padding: '0.5rem 2rem 0.5rem 0.875rem',
+        borderRadius: 10,
+        background: 'rgba(255,255,255,0.05)',
+        border: '1px solid rgba(255,255,255,0.12)',
+        color: 'var(--text-primary)',
+        fontSize: '0.8125rem',
+        fontFamily: 'inherit',
+        appearance: 'none',
+        outline: 'none',
+        cursor: 'pointer',
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237c8db5' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'right 0.625rem center',
+    };
+
     return (
         <div className="space-y-6">
             {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-text-main">Issue Tracker</h1>
-                    <p className="text-text-muted text-sm mt-1">Manage and track project issues</p>
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                             style={{ background:'rgba(91,156,246,0.1)', border:'1px solid rgba(91,156,246,0.25)', color:'#5b9cf6' }}>
+                            <Filter size={10}/> Tracker
+                        </div>
+                    </div>
+                    <h1 className="text-2xl font-extrabold tracking-tight"
+                        style={{ background:'linear-gradient(135deg,#eef2ff 0%,#93c5fd 50%,#c4b5fd 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>
+                        Issue Tracker
+                    </h1>
+                    <p className="text-sm mt-1" style={{ color:'var(--text-secondary)' }}>Manage and track project issues</p>
                 </div>
                 {['Team Member', 'Tester'].includes(user?.role) && (
-                    <button
-                        onClick={handleCreateIssue}
-                        className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
-                    >
-                        <Plus className="w-4 h-4" />
-                        Report Issue
+                    <button onClick={handleCreateIssue} className="btn-primary flex items-center gap-2">
+                        <Plus size={16}/> Report Issue
                     </button>
                 )}
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap gap-4 bg-surface p-4 rounded-xl border border-border">
-                <div className="flex items-center gap-2 text-text-muted">
-                    <Filter className="w-4 h-4" />
-                    <span className="text-sm font-medium">Filters:</span>
+            <div className="flex flex-wrap gap-3 items-center p-4 rounded-[18px]"
+                 style={{ background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.07)' }}>
+                <div className="flex items-center gap-2" style={{ color:'rgba(255,255,255,0.4)' }}>
+                    <Filter size={14}/>
+                    <span className="text-xs font-bold uppercase tracking-widest">Filters</span>
                 </div>
 
-                <select
-                    value={filters.status}
-                    onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                    className="bg-background border border-border text-text-main text-sm rounded-lg px-3 py-2 outline-none focus:border-primary-500"
-                >
+                <select value={filters.status} onChange={e => setFilters({...filters, status: e.target.value})} style={selSt}
+                        onFocus={e=>{e.target.style.borderColor='rgba(91,156,246,0.5)';e.target.style.boxShadow='0 0 0 3px rgba(91,156,246,0.12)';}}
+                        onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,0.12)';e.target.style.boxShadow='';}}>
                     <option value="">All Status</option>
                     <option value="Open">Open</option>
                     <option value="In Progress">In Progress</option>
@@ -123,22 +144,19 @@ const IssueTracker = () => {
                     <option value="Closed">Closed</option>
                 </select>
 
-                <select
-                    value={filters.priority}
-                    onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
-                    className="bg-background border border-border text-text-main text-sm rounded-lg px-3 py-2 outline-none focus:border-primary-500"
-                >
+                <select value={filters.priority} onChange={e => setFilters({...filters, priority: e.target.value})} style={selSt}
+                        onFocus={e=>{e.target.style.borderColor='rgba(91,156,246,0.5)';e.target.style.boxShadow='0 0 0 3px rgba(91,156,246,0.12)';}}
+                        onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,0.12)';e.target.style.boxShadow='';}}>
                     <option value="">All Priority</option>
                     <option value="Immediate">Immediate</option>
                     <option value="High">High</option>
                     <option value="Normal">Normal</option>
                     <option value="Low">Low</option>
                 </select>
-                <select
-                    value={filters.severity}
-                    onChange={(e) => setFilters({ ...filters, severity: e.target.value })}
-                    className="bg-background border border-border text-text-main text-sm rounded-lg px-3 py-2 outline-none focus:border-primary-500"
-                >
+
+                <select value={filters.severity} onChange={e => setFilters({...filters, severity: e.target.value})} style={selSt}
+                        onFocus={e=>{e.target.style.borderColor='rgba(91,156,246,0.5)';e.target.style.boxShadow='0 0 0 3px rgba(91,156,246,0.12)';}}
+                        onBlur={e=>{e.target.style.borderColor='rgba(255,255,255,0.12)';e.target.style.boxShadow='';}}>
                     <option value="">All Severity</option>
                     <option value="Critical">Critical</option>
                     <option value="High">High</option>
@@ -148,15 +166,15 @@ const IssueTracker = () => {
             </div>
 
             {/* Issues List */}
-            <div className="bg-surface rounded-xl border border-border overflow-hidden">
+            <div className="overflow-hidden rounded-[18px]" style={{ background:'rgba(255,255,255,0.025)', border:'1px solid rgba(255,255,255,0.07)' }}>
                 {loading ? (
                     <div className="flex justify-center py-12">
-                        <div className="w-8 h-8 border-2 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor:'rgba(91,156,246,0.3)', borderTopColor:'#5b9cf6' }}/>
                     </div>
                 ) : issues.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-text-muted">
-                        <Bug className="w-12 h-12 mb-3 opacity-20" />
-                        <p>No issues found</p>
+                    <div className="flex flex-col items-center justify-center py-16" style={{ color:'rgba(255,255,255,0.25)' }}>
+                        <Bug className="w-12 h-12 mb-3 opacity-30" />
+                        <p className="text-sm">No issues found</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">

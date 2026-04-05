@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Settings as SettingsIcon, User, Bell, Lock, Palette, Shield, ChevronLeft, Save, X, Eye, EyeOff, MessageSquare, Loader2 } from 'lucide-react';
+import { Settings as SettingsIcon, User, Bell, Lock, Palette, Shield, ChevronLeft, Save, X, Eye, EyeOff, MessageSquare, Loader2, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useMessaging } from '../context/MessagingContext';
 
@@ -110,101 +110,6 @@ const Settings = () => {
                             />
                             <p className="text-xs text-text-muted mt-1.5 text-left pl-1">This name will be visible to your team members.</p>
                         </div>
-                    </div>
-                </div>
-
-                {/* Security Section */}
-                <div className="card p-6 border-border bg-surface/50">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="p-2 bg-purple-500/10 rounded-lg">
-                            <Lock className="text-purple-400" size={20} />
-                        </div>
-                        <h3 className="font-semibold text-text-main text-lg">Change Password</h3>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-text-muted mb-1.5 text-left">Current Password</label>
-                            <div className="relative">
-                                <input
-                                    type={showPasswords.current ? "text" : "password"}
-                                    value={profileData.currentPassword}
-                                    onChange={(e) => setProfileData({ ...profileData, currentPassword: e.target.value })}
-                                    className="input-field w-full pr-10"
-                                    placeholder="••••••••"
-                                />
-                                <button
-                                    onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main"
-                                >
-                                    {showPasswords.current ? <EyeOff size={16} /> : <Eye size={16} />}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-text-muted mb-1.5 text-left">New Password</label>
-                            <div className="relative">
-                                <input
-                                    type={showPasswords.new ? "text" : "password"}
-                                    value={profileData.newPassword}
-                                    onChange={(e) => setProfileData({ ...profileData, newPassword: e.target.value })}
-                                    className="input-field w-full pr-10"
-                                    placeholder="••••••••"
-                                />
-                                <button
-                                    onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main"
-                                >
-                                    {showPasswords.new ? <EyeOff size={16} /> : <Eye size={16} />}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-text-muted mb-1.5 text-left">Confirm Password</label>
-                            <div className="relative">
-                                <input
-                                    type={showPasswords.confirm ? "text" : "password"}
-                                    value={profileData.confirmPassword}
-                                    onChange={(e) => setProfileData({ ...profileData, confirmPassword: e.target.value })}
-                                    className="input-field w-full pr-10"
-                                    placeholder="••••••••"
-                                />
-                                <button
-                                    onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main"
-                                >
-                                    {showPasswords.confirm ? <EyeOff size={16} /> : <Eye size={16} />}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Authentication Section */}
-                <div className="card p-6 border-border bg-surface/50 text-left">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 bg-green-500/10 rounded-lg">
-                                <Shield className="text-green-400" size={20} />
-                            </div>
-                            <div>
-                                <h3 className="font-semibold text-text-main text-lg">Two-Factor Authentication (2FA)</h3>
-                                <p className="text-sm text-text-muted">Add an extra layer of security to your account.</p>
-                            </div>
-                        </div>
-                        <button
-                            onClick={() => setProfileData({ ...profileData, enable2FA: !profileData.enable2FA })}
-                            className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none ${profileData.enable2FA ? 'bg-blue-600' : 'bg-surface-hover'}`}
-                        >
-                            <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ${profileData.enable2FA ? 'translate-x-6' : 'translate-x-0'}`} />
-                        </button>
-                    </div>
-                    <div className="flex items-center gap-2 pl-11">
-                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${profileData.enable2FA ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
-                            {profileData.enable2FA ? 'Enabled' : 'Disabled'}
-                        </span>
                     </div>
                 </div>
             </div>
@@ -348,12 +253,176 @@ const Settings = () => {
         </div>
     );
 
+    const renderSecuritySection = () => (
+        <div className="space-y-6 animate-fadeIn">
+            <div className="flex items-center gap-4 mb-8">
+                <button onClick={() => setActiveSection(null)} className="p-2 rounded-lg hover:bg-surface-hover text-text-muted hover:text-text-main transition-colors">
+                    <ChevronLeft size={20} />
+                </button>
+                <div>
+                    <h2 className="text-xl font-bold text-text-main">Security</h2>
+                    <p className="text-text-muted text-sm">Update your passwords and keep your account secure</p>
+                </div>
+            </div>
+
+            <div className="grid gap-6">
+                <div className="card p-6 border-border bg-surface/50">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2 bg-purple-500/10 rounded-lg">
+                            <Lock className="text-purple-400" size={20} />
+                        </div>
+                        <h3 className="font-semibold text-text-main text-lg">Change Password</h3>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-text-muted mb-1.5 text-left">Current Password</label>
+                            <div className="relative">
+                                <input type={showPasswords.current ? "text" : "password"} value={profileData.currentPassword} onChange={(e) => setProfileData({ ...profileData, currentPassword: e.target.value })} className="input-field w-full pr-10" placeholder="••••••••" />
+                                <button onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main">
+                                    {showPasswords.current ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-text-muted mb-1.5 text-left">New Password</label>
+                            <div className="relative">
+                                <input type={showPasswords.new ? "text" : "password"} value={profileData.newPassword} onChange={(e) => setProfileData({ ...profileData, newPassword: e.target.value })} className="input-field w-full pr-10" placeholder="••••••••" />
+                                <button onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main">
+                                    {showPasswords.new ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-text-muted mb-1.5 text-left">Confirm Password</label>
+                            <div className="relative">
+                                <input type={showPasswords.confirm ? "text" : "password"} value={profileData.confirmPassword} onChange={(e) => setProfileData({ ...profileData, confirmPassword: e.target.value })} className="input-field w-full pr-10" placeholder="••••••••" />
+                                <button onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })} className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main">
+                                    {showPasswords.confirm ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card p-6 border-border bg-surface/50 text-left">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-500/10 rounded-lg"><Shield className="text-green-400" size={20} /></div>
+                            <div>
+                                <h3 className="font-semibold text-text-main text-lg">Two-Factor Authentication (2FA)</h3>
+                                <p className="text-sm text-text-muted">Add an extra layer of security to your account.</p>
+                            </div>
+                        </div>
+                        <button onClick={() => setProfileData({ ...profileData, enable2FA: !profileData.enable2FA })} className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none ${profileData.enable2FA ? 'bg-blue-600' : 'bg-surface-hover'}`}>
+                            <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ${profileData.enable2FA ? 'translate-x-6' : 'translate-x-0'}`} />
+                        </button>
+                    </div>
+                    <div className="flex items-center gap-2 pl-11">
+                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${profileData.enable2FA ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>{profileData.enable2FA ? 'Enabled' : 'Disabled'}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-border">
+                <button onClick={() => setActiveSection(null)} className="px-6 py-2 rounded-lg text-text-muted hover:text-white hover:bg-surface-hover transition-all text-sm font-medium">Cancel</button>
+                <button onClick={handleSave} disabled={isSaving} className="flex items-center gap-2 px-6 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white rounded-lg transition-all text-sm font-semibold shadow-lg shadow-blue-500/10">
+                    {isSaving ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span> : <Save size={18} />}
+                    {isSaving ? 'Saving...' : 'Update Password'}
+                </button>
+            </div>
+        </div>
+    );
+
+    const renderNotificationsSection = () => (
+        <div className="space-y-6 animate-fadeIn">
+            <div className="flex items-center gap-4 mb-8">
+                <button onClick={() => setActiveSection(null)} className="p-2 rounded-lg hover:bg-surface-hover text-text-muted hover:text-text-main transition-colors"><ChevronLeft size={20} /></button>
+                <div>
+                    <h2 className="text-xl font-bold text-text-main">Notifications</h2>
+                    <p className="text-text-muted text-sm">Manage how and when you receive alerts</p>
+                </div>
+            </div>
+            
+            <div className="grid gap-6">
+                <div className="card p-6 border-border bg-surface/50 text-left">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2 bg-blue-500/10 rounded-lg"><Bell className="text-blue-400" size={20} /></div>
+                        <h3 className="font-semibold text-text-main text-lg">Email Alerts</h3>
+                    </div>
+                    
+                    <div className="space-y-4">
+                        {['Daily Digest', 'New Tasks Assigned', 'Project Updates', 'Direct Messages'].map((item) => (
+                            <div key={item} className="flex items-center justify-between p-3 rounded-lg border border-border/50 bg-background/30 hover:bg-surface-hover transition-colors">
+                                <span className="text-sm font-medium text-text-main">{item}</span>
+                                <button className="relative w-10 h-5 rounded-full bg-blue-600 transition-colors focus:outline-none">
+                                    <div className="absolute top-0.5 left-0.5 bg-white w-4 h-4 rounded-full translate-x-5 transition-transform" />
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <div className="flex items-center justify-end gap-3 pt-6 border-t border-border">
+                <button onClick={() => setActiveSection(null)} className="btn-secondary">Go Back</button>
+                <button onClick={handleSave} className="btn-primary flex items-center gap-2"><Save size={16}/> Save Preferences</button>
+            </div>
+        </div>
+    );
+
+    const renderAppearanceSection = () => (
+        <div className="space-y-6 animate-fadeIn">
+            <div className="flex items-center gap-4 mb-8">
+                <button onClick={() => setActiveSection(null)} className="p-2 rounded-lg hover:bg-surface-hover text-text-muted hover:text-text-main transition-colors"><ChevronLeft size={20} /></button>
+                <div>
+                    <h2 className="text-xl font-bold text-text-main">Appearance</h2>
+                    <p className="text-text-muted text-sm">Customize UI themes and colors</p>
+                </div>
+            </div>
+            
+            <div className="grid gap-6">
+                <div className="card p-6 border-border bg-surface/50 text-left">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2 bg-pink-500/10 rounded-lg"><Palette className="text-pink-400" size={20} /></div>
+                        <h3 className="font-semibold text-text-main text-lg">Theme Modes</h3>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="p-4 rounded-xl border-2 border-primary-500 bg-[#03060f] cursor-pointer relative">
+                            <div className="w-10 h-10 rounded-full bg-surface mb-2 flex items-center justify-center">
+                                <div className="w-5 h-5 rounded-full bg-indigo-500" />
+                            </div>
+                            <h4 className="font-medium text-white mb-1">Deep Space</h4>
+                            <p className="text-xs text-text-muted">Premium dark aesthetics</p>
+                            <div className="absolute top-3 right-3 text-primary-400"><CheckCircle size={18} /></div>
+                        </div>
+                        <div className="p-4 rounded-xl border border-border bg-white cursor-not-allowed opacity-50 relative">
+                            <div className="w-10 h-10 rounded-full bg-gray-100 mb-2 flex items-center justify-center">
+                                <div className="w-5 h-5 rounded-full bg-gray-400" />
+                            </div>
+                            <h4 className="font-medium text-gray-800 mb-1">Light Mode</h4>
+                            <p className="text-xs text-gray-500">Coming soon</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     const renderSectionContent = () => {
         switch (activeSection) {
             case 'profile':
                 return renderProfileSection();
             case 'messaging':
                 return renderMessagingSection();
+            case 'security':
+                return renderSecuritySection();
+            case 'notifications':
+                return renderNotificationsSection();
+            case 'appearance':
+                return renderAppearanceSection();
             default:
                 return null;
         }

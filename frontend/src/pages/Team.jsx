@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Search, Filter, Mail, Phone, MapPin, X,
     Edit, Trash2, Eye, MessageSquare, ChevronDown,
@@ -353,6 +354,7 @@ const TeamToolbar = ({
 const TeamMemberCard = ({ member, onCardClick, userRole }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [gradientColors] = useState(() => getGradientColors(member.name));
+    const navigate = useNavigate();
 
     const canEdit = userRole === 'Super Admin';
     const canDelete = userRole === 'Super Admin';
@@ -392,7 +394,7 @@ const TeamMemberCard = ({ member, onCardClick, userRole }) => {
                 </button>
                 {canEdit && (
                     <button
-                        onClick={(e) => { e.stopPropagation(); }}
+                        onClick={(e) => { e.stopPropagation(); alert('Edit member functionality coming soon.'); }}
                         className="p-2 rounded-lg bg-surface/80 hover:bg-blue-600 text-text-muted hover:text-white transition-colors"
                         title="Edit"
                     >
@@ -401,7 +403,7 @@ const TeamMemberCard = ({ member, onCardClick, userRole }) => {
                 )}
                 {canMessage && (
                     <button
-                        onClick={(e) => { e.stopPropagation(); }}
+                        onClick={(e) => { e.stopPropagation(); navigate('/messages'); }}
                         className="p-2 rounded-lg bg-surface/80 hover:bg-green-600 text-text-muted hover:text-white transition-colors"
                         title="Message"
                     >
@@ -410,7 +412,7 @@ const TeamMemberCard = ({ member, onCardClick, userRole }) => {
                 )}
                 {canDelete && (
                     <button
-                        onClick={(e) => { e.stopPropagation(); }}
+                        onClick={(e) => { e.stopPropagation(); alert('Delete member functionality coming soon.'); }}
                         className="p-2 rounded-lg bg-surface/80 hover:bg-red-600 text-text-muted hover:text-white transition-colors"
                         title="Delete"
                     >

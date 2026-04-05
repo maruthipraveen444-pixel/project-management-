@@ -9,7 +9,6 @@ const Layout = () => {
     const [isMobile, setIsMobile] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-    // Handle responsive behavior
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 768) {
@@ -20,34 +19,38 @@ const Layout = () => {
                 setSidebarOpen(true);
             }
         };
-
-        // Initial check
         handleResize();
-
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Global keyboard shortcuts
     useEffect(() => {
         const handleKeyDown = (e) => {
-            // Toggle search with Ctrl + /
             if (e.ctrlKey && e.key === '/') {
                 e.preventDefault();
                 setIsSearchOpen(prev => !prev);
             }
         };
-
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
     return (
-        <div className="min-h-screen bg-background text-text-main flex">
-            {/* Global Search Modal */}
+        <div className="min-h-screen text-text-main flex relative overflow-hidden"
+             style={{ background: 'var(--bg-primary)' }}>
+
+            {/* ─── Floating glow orbs (3D glass ambiance) ─── */}
+            <div className="glow-orb glow-orb-1" />
+            <div className="glow-orb glow-orb-2" />
+            <div className="glow-orb glow-orb-3" />
+
             {/* Global Search Modal */}
             {isSearchOpen && (
-                <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/60 backdrop-blur-sm" onClick={() => setIsSearchOpen(false)}>
+                <div
+                    className="fixed inset-0 z-50 flex items-start justify-center pt-20"
+                    style={{ background: 'rgba(6,11,26,0.75)', backdropFilter: 'blur(12px)' }}
+                    onClick={() => setIsSearchOpen(false)}
+                >
                     <div onClick={(e) => e.stopPropagation()}>
                         <GlobalSearch
                             isOpen={isSearchOpen}
@@ -68,9 +71,9 @@ const Layout = () => {
             {/* Main Content Wrapper */}
             <div
                 className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out
-          ${!isMobile && sidebarOpen ? 'ml-64' : ''}
-          ${!isMobile && !sidebarOpen ? 'ml-20' : ''}
-        `}
+                  ${!isMobile && sidebarOpen  ? 'ml-64' : ''}
+                  ${!isMobile && !sidebarOpen ? 'ml-20' : ''}
+                `}
             >
                 <Header
                     toggleSidebar={() => setSidebarOpen(!sidebarOpen)}

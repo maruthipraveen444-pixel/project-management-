@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Plus, Sparkles, TrendingUp } from 'lucide-react';
 import api from '../utils/api';
 import WorkStats from '../components/dashboard/WorkStats';
 import AttendanceCard from '../components/dashboard/AttendanceCard';
@@ -55,12 +56,19 @@ const Dashboard = () => {
 
     if (loading) {
         return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-pulse">
-                {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-32 bg-surface rounded-xl"></div>
-                ))}
-                <div className="col-span-2 h-96 bg-surface rounded-xl"></div>
-                <div className="h-96 bg-surface rounded-xl"></div>
+            <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {[1,2,3,4].map(i => (
+                        <div key={i} className="h-32 rounded-[20px] skeleton"
+                             style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.06)' }}/>
+                    ))}
+                </div>
+                <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+                    <div className="xl:col-span-3 h-[480px] rounded-[20px] skeleton"
+                         style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.06)' }}/>
+                    <div className="h-[480px] rounded-[20px] skeleton"
+                         style={{ background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.06)' }}/>
+                </div>
             </div>
         );
     }
@@ -78,20 +86,42 @@ const Dashboard = () => {
 
     return (
         <div className="space-y-6">
-            {/* Header Section */}
-            <div className="flex justify-between items-end mb-8">
+            {/* ── Premium Dashboard Header ── */}
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-text-main mb-1">
-                        {greeting.text}, {data.user.name.split(' ')[0]}! {greeting.emoji}
+                    {/* Subtle label */}
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest"
+                             style={{ background:'rgba(91,156,246,0.1)', border:'1px solid rgba(91,156,246,0.25)', color:'#5b9cf6' }}>
+                            <Sparkles size={10}/>
+                            Overview
+                        </div>
+                        <div className="w-1.5 h-1.5 rounded-full animate-pulse-glow"
+                             style={{ background:'#34d399', boxShadow:'0 0 8px rgba(52,211,153,0.8)' }}/>
+                        <span className="text-[11px]" style={{ color:'var(--text-secondary)' }}>Live</span>
+                    </div>
+
+                    <h1 className="text-3xl font-extrabold leading-tight tracking-tight mb-1.5"
+                        style={{
+                            background:'linear-gradient(135deg, #eef2ff 0%, #93c5fd 50%, #c4b5fd 100%)',
+                            WebkitBackgroundClip:'text',
+                            WebkitTextFillColor:'transparent',
+                            backgroundClip:'text',
+                        }}>
+                        {greeting.text}, {data.user.name.split(' ')[0]}!&nbsp;{greeting.emoji}
                     </h1>
-                    <p className="text-text-muted">Here's what's happening with your projects today.</p>
+                    <p className="text-sm font-medium" style={{ color:'var(--text-secondary)' }}>
+                        Here's what's happening with your projects today.
+                    </p>
                 </div>
+
                 {canCreateProject && (
                     <button
                         onClick={() => navigate('/projects', { state: { openCreateModal: true } })}
-                        className="btn-primary"
+                        className="btn-primary flex items-center gap-2 whitespace-nowrap"
                     >
-                        + New Project
+                        <Plus size={16}/>
+                        New Project
                     </button>
                 )}
             </div>

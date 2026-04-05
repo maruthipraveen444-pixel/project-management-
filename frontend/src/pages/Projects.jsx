@@ -78,121 +78,161 @@ const ProjectModal = ({ isOpen, onClose, onSubmit, project = null, loading }) =>
     const colors = ['#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4'];
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
-            <div className="relative bg-surface rounded-2xl border border-border w-full max-w-lg mx-4 shadow-2xl">
-                <div className="flex justify-between items-center p-6 border-b border-border">
-                    <h2 className="text-xl font-bold text-text-main">
-                        {project ? 'Edit Project' : 'Create New Project'}
-                    </h2>
-                    <button onClick={onClose} className="text-text-muted hover:text-text-main transition-colors">
-                        <X size={24} />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="absolute inset-0 pointer-events-none" style={{ background:'rgba(3,6,15,0.8)', backdropFilter:'blur(16px)' }} />
+            <div className="absolute inset-0" onClick={onClose} />
+            <div className="relative w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden animate-fadeInScale z-10"
+                 style={{
+                     background: 'rgba(7,12,28,0.95)',
+                     backdropFilter: 'blur(40px)',
+                     WebkitBackdropFilter: 'blur(40px)',
+                     border: '1px solid rgba(255,255,255,0.11)',
+                     borderRadius: 24,
+                     boxShadow: '0 32px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.16)',
+                 }}>
+                {/* Bevel */}
+                <div className="absolute top-0 left-8 right-8 h-px pointer-events-none"
+                     style={{ background:'linear-gradient(90deg,transparent,rgba(91,156,246,0.5),rgba(167,139,250,0.4),transparent)' }} />
+
+                <div className="flex justify-between items-center px-6 py-5" style={{ borderBottom:'1px solid rgba(255,255,255,0.08)' }}>
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-[12px] flex items-center justify-center relative overflow-hidden"
+                             style={{
+                                 background:'linear-gradient(135deg,#5b9cf6,#a78bfa)',
+                                 border:'1px solid rgba(255,255,255,0.2)',
+                                 boxShadow:'inset 0 1px 0 rgba(255,255,255,0.3)'
+                             }}>
+                            <Plus size={18} className="text-white" />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                                {project ? 'Edit Project' : 'Create New Project'}
+                            </h2>
+                            <p className="text-[11px] text-white/40 uppercase tracking-wider font-semibold">
+                                {project ? 'Update details' : 'Fill in the project details below'}
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" onClick={onClose} className="text-text-muted hover:text-white hover:bg-white/5 p-2 rounded-full transition-colors hidden sm:block">
+                        <X size={18} />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-5">
-                    <div>
-                        <label className="block text-sm font-medium text-text-muted mb-2">Project Name *</label>
-                        <input
-                            type="text"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            className="input-field"
-                            placeholder="Enter project name"
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-text-muted mb-2">Description</label>
-                        <textarea
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className="input-field min-h-[100px] resize-none"
-                            placeholder="Brief description of the project"
-                            rows={3}
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
+                <div className="overflow-y-auto px-6 py-5 custom-scrollbar">
+                    <form id="project-form" onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-medium text-dark-300 mb-2">Start Date</label>
+                            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">Project Name *</label>
                             <input
-                                type="date"
-                                value={formData.startDate}
-                                onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                                className="input-field"
+                                type="text"
+                                value={formData.name}
+                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                className="w-full"
+                                placeholder="Enter project name"
+                                required
                             />
                         </div>
+
                         <div>
-                            <label className="block text-sm font-medium text-dark-300 mb-2">End Date</label>
-                            <input
-                                type="date"
-                                value={formData.endDate}
-                                onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                                className="input-field"
+                            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">Description</label>
+                            <textarea
+                                value={formData.description}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                className="w-full min-h-[100px] resize-none"
+                                placeholder="Brief description of the project"
+                                rows={3}
                             />
                         </div>
-                    </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-dark-300 mb-2">Status</label>
-                        <select
-                            value={formData.status}
-                            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                            className="input-field"
-                        >
-                            <option value="Active">Active</option>
-                            <option value="On Hold">On Hold</option>
-                            <option value="Completed">Completed</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-dark-300 mb-2">Milestone *</label>
-                        <select
-                            value={formData.currentMilestone}
-                            onChange={(e) => setFormData({ ...formData, currentMilestone: e.target.value })}
-                            className="input-field"
-                            required
-                        >
-                            <option value="" disabled>Select milestone</option>
-                            <option value="Planning">Planning</option>
-                            <option value="Design">Design</option>
-                            <option value="Development">Development</option>
-                            <option value="Testing">Testing</option>
-                            <option value="Deployment">Deployment</option>
-                            <option value="Maintenance">Maintenance</option>
-                        </select>
-                    </div>
-
-
-                    <div>
-                        <label className="block text-sm font-medium text-dark-300 mb-2">Project Color</label>
-                        <div className="flex gap-2">
-                            {colors.map((color) => (
-                                <button
-                                    key={color}
-                                    type="button"
-                                    onClick={() => setFormData({ ...formData, color })}
-                                    className={`w-8 h-8 rounded-lg transition-transform ${formData.color === color ? 'ring-2 ring-white ring-offset-2 ring-offset-surface scale-110' : 'hover:scale-105'}`}
-                                    style={{ backgroundColor: color }}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">Start Date</label>
+                                <input
+                                    type="date"
+                                    value={formData.startDate}
+                                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                                    className="w-full"
                                 />
-                            ))}
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">End Date</label>
+                                <input
+                                    type="date"
+                                    value={formData.endDate}
+                                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                                    className="w-full"
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="flex gap-3 pt-4">
-                        <button type="button" onClick={onClose} className="flex-1 btn-secondary">
-                            Cancel
-                        </button>
-                        <button type="submit" disabled={loading} className="flex-1 btn-primary">
-                            {loading ? (
-                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
-                            ) : project ? 'Update Project' : 'Create Project'}
-                        </button>
-                    </div>
-                </form>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">Status</label>
+                                <div className="relative">
+                                    <select
+                                        value={formData.status}
+                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                        className="w-full appearance-none pr-10"
+                                    >
+                                        <option value="Active">Active</option>
+                                        <option value="On Hold">On Hold</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                    <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">Milestone *</label>
+                                <div className="relative">
+                                    <select
+                                        value={formData.currentMilestone}
+                                        onChange={(e) => setFormData({ ...formData, currentMilestone: e.target.value })}
+                                        className="w-full appearance-none pr-10"
+                                        required
+                                    >
+                                        <option value="" disabled>Select milestone</option>
+                                        <option value="Planning">Planning</option>
+                                        <option value="Design">Design</option>
+                                        <option value="Development">Development</option>
+                                        <option value="Testing">Testing</option>
+                                        <option value="Deployment">Deployment</option>
+                                        <option value="Maintenance">Maintenance</option>
+                                    </select>
+                                    <ChevronDown size={14} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">Project Color</label>
+                            <div className="flex gap-2">
+                                {colors.map((color) => (
+                                    <button
+                                        key={color}
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, color })}
+                                        className={`w-8 h-8 rounded-lg transition-all ${formData.color === color ? 'ring-2 ring-white ring-offset-2 ring-offset-[#03060f] scale-110 shadow-[0_0_12px_rgba(255,255,255,0.3)]' : 'opacity-70 hover:opacity-100 hover:scale-105'} flex items-center justify-center`}
+                                        style={{ backgroundColor: color }}
+                                    >
+                                        {formData.color === color && <div className="w-1.5 h-1.5 bg-white rounded-full"></div>}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div className="p-5 flex gap-3" style={{ borderTop:'1px solid rgba(255,255,255,0.08)', background:'rgba(0,0,0,0.2)' }}>
+                    <button type="button" onClick={onClose}
+                            className="flex-1 py-3 px-4 rounded-xl text-white/60 bg-white/5 hover:bg-white/10 hover:text-white transition-colors border border-white/10 font-medium text-sm">
+                        Cancel
+                    </button>
+                    <button type="submit" form="project-form" disabled={loading}
+                            className="flex-1 btn-primary flex items-center justify-center gap-2">
+                        {loading
+                            ? <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            : <><Plus size={16}/> {project ? 'Update Project' : 'Create Project'}</>}
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -561,7 +601,7 @@ const Projects = () => {
                                             <MoreVertical size={18} />
                                         </button>
                                         {activeMenu === project._id && (
-                                            <div className="absolute right-0 top-8 bg-surface rounded-lg border border-border shadow-xl z-10 py-1 min-w-[160px]">
+                                            <div className="absolute right-0 top-8 bg-[#03060f] glass-elevated rounded-xl z-[99] py-1 min-w-[160px]">
                                                 {canEditProject(project) && (
                                                     <button
                                                         onClick={() => {
