@@ -1,5 +1,7 @@
 import User from '../models/User.js';
 import Organization from '../models/Organization.js';
+import Project from '../models/Project.js';
+import Task from '../models/Task.js';
 import { generateToken } from '../middleware/auth.js';
 
 // @desc    Register user & create organization
@@ -206,58 +208,111 @@ export const updatePassword = async (req, res) => {
 // @access  Public
 export const seedDB = async (req, res) => {
     try {
-        // Find existing Super Admin
         const adminEmail = 'jonathan@acme.com';
-        const existingAdmin = await User.findOne({ email: adminEmail });
         
+        // 1. Cleanup existing for this specific seed to allow "refresh"
+        const existingAdmin = await User.findOne({ email: adminEmail });
         if (existingAdmin) {
-            return res.status(200).json({
-                success: true,
-                message: 'Database already has accounts!'
+            await Project.deleteMany({ organization: existingAdmin.organization });
+            await Task.deleteMany({ createdBy: existingAdmin._id });
+        } else {
+            // Create Super Admin if not exists
+            const admin = await User.create({
+                name: 'Jonathan Powell',
+                email: adminEmail,
+                password: 'password123',
+                role: 'Super Admin',
+                designation: 'Chief Product Designer',
+                department: 'UI/UX Design'
+            });
+
+            const org = await Organization.create({
+                name: 'Acme Pro Corp',
+                createdBy: admin._id,
+                members: [{ user: admin._id }]
+            });
+
+            admin.organization = org._id;
+            await admin.save();
+        }
+
+        const admin = await User.findOne({ email: adminEmail });
+        const orgId = admin.organization;
+
+        // 2. Create Team Members if not exists
+        let manager = await User.findOne({ email: 'anthony@acme.com' });
+        if (!manager) {
+            manager = await User.create({
+                name: 'Anthony Manager',
+                email: 'anthony@acme.com',
+                password: 'password123',
+                role: 'Project Manager',
+                organization: orgId
             });
         }
 
-        // 1. Create Super Admin
-        const admin = await User.create({
-            name: 'Jonathan Powell',
-            email: adminEmail,
-            password: 'password123',
-            role: 'Super Admin',
-            designation: 'Chief Product Designer',
-            department: 'UI/UX Design'
+        let dev = await User.findOne({ email: 'troy@acme.com' });
+        if (!dev) {
+            dev = await User.create({
+                name: 'Troy Member',
+                email: 'troy@acme.com',
+                password: 'password123',
+                role: 'Team Member',
+                organization: orgId
+            });
+        }
+
+        // 3. Create Sample Projects
+        const project1 = await Project.create({
+            name: 'Enterprise Cloud Migration',
+            description: 'Migrating legacy servers to high-performance cloud infrastructure.',
+            organization: orgId,
+            status: 'Active',
+            currentMilestone: 'Development',
+            priority: 'High',
+            startDate: new Date(),
+            endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+            projectLead: admin._id,
+            color: '#3b82f6'
         });
 
-        // 2. Create organization
-        const org = await Organization.create({
-            name: 'Acme Pro Corp',
+        const project2 = await Project.create({
+            name: 'UI/UX Redesign',
+            description: 'Redesigning the core user experience for the mobile application.',
+            organization: orgId,
+            status: 'Active',
+            currentMilestone: 'Design',
+            priority: 'Medium',
+            startDate: new Date(),
+            endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+            projectLead: manager._id,
+            color: '#8b5cf6'
+        });
+
+        // 4. Create Sample Tasks
+        await Task.create({
+            title: 'Setup AWS Infrastructure',
+            description: 'Configure VPC, EC2 instances and RDS clusters.',
+            project: project1._id,
             createdBy: admin._id,
-            members: [{ user: admin._id }]
+            assignedTo: [dev._id],
+            status: 'In Progress',
+            priority: 'Critical'
         });
 
-        // 3. Link admin to org
-        admin.organization = org._id;
-        await admin.save();
-
-        // 4. Create Manager & Employee
-        await User.create({
-            name: 'Anthony Manager',
-            email: 'anthony@acme.com',
-            password: 'password123',
-            role: 'Project Manager',
-            organization: org._id
-        });
-
-        await User.create({
-            name: 'Troy Member',
-            email: 'troy@acme.com',
-            password: 'password123',
-            role: 'Team Member',
-            organization: org._id
+        await Task.create({
+            title: 'Design Wireframes',
+            description: 'Create low-fidelity wireframes for the new dashboard.',
+            project: project2._id,
+            createdBy: admin._id,
+            assignedTo: [admin._id],
+            status: 'To Do',
+            priority: 'Medium'
         });
 
         res.status(200).json({
             success: true,
-            message: '🚀 Cloud seeded with default roles successfully!'
+            message: '🚀 Demo data created successfully!'
         });
     } catch (error) {
         res.status(500).json({
