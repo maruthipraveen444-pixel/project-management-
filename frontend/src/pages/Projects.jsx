@@ -126,7 +126,7 @@ const ProjectModal = ({ isOpen, onClose, onSubmit, project = null, loading }) =>
                                 type="text"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                className="w-full"
+                                className="input-field"
                                 placeholder="Enter project name"
                                 required
                             />
@@ -137,7 +137,7 @@ const ProjectModal = ({ isOpen, onClose, onSubmit, project = null, loading }) =>
                             <textarea
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full min-h-[100px] resize-none"
+                                className="input-field min-h-[100px] resize-none"
                                 placeholder="Brief description of the project"
                                 rows={3}
                             />
@@ -150,7 +150,7 @@ const ProjectModal = ({ isOpen, onClose, onSubmit, project = null, loading }) =>
                                     type="date"
                                     value={formData.startDate}
                                     onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                                    className="w-full"
+                                    className="input-field"
                                 />
                             </div>
                             <div>
@@ -159,7 +159,7 @@ const ProjectModal = ({ isOpen, onClose, onSubmit, project = null, loading }) =>
                                     type="date"
                                     value={formData.endDate}
                                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                                    className="w-full"
+                                    className="input-field"
                                 />
                             </div>
                         </div>
@@ -171,7 +171,7 @@ const ProjectModal = ({ isOpen, onClose, onSubmit, project = null, loading }) =>
                                     <select
                                         value={formData.status}
                                         onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                        className="w-full appearance-none pr-10"
+                                        className="input-field appearance-none pr-10"
                                     >
                                         <option value="Active">Active</option>
                                         <option value="On Hold">On Hold</option>
@@ -186,7 +186,7 @@ const ProjectModal = ({ isOpen, onClose, onSubmit, project = null, loading }) =>
                                     <select
                                         value={formData.currentMilestone}
                                         onChange={(e) => setFormData({ ...formData, currentMilestone: e.target.value })}
-                                        className="w-full appearance-none pr-10"
+                                        className="input-field appearance-none pr-10"
                                         required
                                     >
                                         <option value="" disabled>Select milestone</option>
