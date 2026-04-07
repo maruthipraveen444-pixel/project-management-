@@ -154,12 +154,13 @@ const ProjectModal = ({ isOpen, onClose, onSubmit, project = null, loading }) =>
                                 />
                             </div>
                             <div>
-                                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">End Date</label>
+                                <label className="block text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1.5 ml-1">End Date *</label>
                                 <input
                                     type="date"
                                     value={formData.endDate}
                                     onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
                                     className="input-field"
+                                    required
                                 />
                             </div>
                         </div>

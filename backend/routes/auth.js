@@ -14,7 +14,7 @@ const router = express.Router();
 // Public routes
 router.post('/register', register);
 router.post('/login', login);
-router.get('/seed', seedDB); // New hidden seeding route
+// router.get('/seed', seedDB); // Disabled for security after initial setup
 
 // Protected routes
 router.get('/me', protect, getMe);

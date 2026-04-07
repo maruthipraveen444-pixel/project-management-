@@ -7,7 +7,8 @@ const MessagingContext = createContext();
 
 export const useMessaging = () => useContext(MessagingContext);
 
-const SOCKET_URL = 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const SOCKET_URL = API_URL.replace('/api', '');
 
 export const MessagingProvider = ({ children }) => {
     const { user, isAuthenticated } = useAuth();
