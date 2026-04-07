@@ -200,3 +200,70 @@ export const updatePassword = async (req, res) => {
         });
     }
 };
+
+// @desc    Seed the database with default accounts
+// @route   GET /api/auth/seed
+// @access  Public
+export const seedDB = async (req, res) => {
+    try {
+        // Find existing Super Admin
+        const adminEmail = 'jonathan@acme.com';
+        const existingAdmin = await User.findOne({ email: adminEmail });
+        
+        if (existingAdmin) {
+            return res.status(200).json({
+                success: true,
+                message: 'Database already has accounts!'
+            });
+        }
+
+        // 1. Create Super Admin
+        const admin = await User.create({
+            name: 'Jonathan Powell',
+            email: adminEmail,
+            password: 'password123',
+            role: 'Super Admin',
+            designation: 'Chief Product Designer',
+            department: 'UI/UX Design'
+        });
+
+        // 2. Create organization
+        const org = await Organization.create({
+            name: 'Acme Pro Corp',
+            createdBy: admin._id,
+            members: [{ user: admin._id }]
+        });
+
+        // 3. Link admin to org
+        admin.organization = org._id;
+        await admin.save();
+
+        // 4. Create Manager & Employee
+        await User.create({
+            name: 'Anthony Manager',
+            email: 'anthony@acme.com',
+            password: 'password123',
+            role: 'Project Manager',
+            organization: org._id
+        });
+
+        await User.create({
+            name: 'Troy Member',
+            email: 'troy@acme.com',
+            password: 'password123',
+            role: 'Team Member',
+            organization: org._id
+        });
+
+        res.status(200).json({
+            success: true,
+            message: '🚀 Cloud seeded with default roles successfully!'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Seeding failed',
+            error: error.message
+        });
+    }
+};
