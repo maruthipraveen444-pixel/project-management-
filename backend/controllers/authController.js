@@ -18,25 +18,24 @@ export const register = async (req, res) => {
             });
         }
 
-        // Create organization
-        const organization = await Organization.create({
-            name: organizationName,
-            createdBy: null // Will be updated after user creation
-        });
-
-        // Create user as Super Admin
+        // 1. Create user first (temporarily without organization)
         const user = await User.create({
             name,
             email,
             password,
-            role: 'Super Admin',
-            organization: organization._id
+            role: 'Super Admin'
         });
 
-        // Update organization with creator and first member
-        organization.createdBy = user._id;
-        organization.members.push({ user: user._id });
-        await organization.save();
+        // 2. Create organization with the user as creator
+        const organization = await Organization.create({
+            name: organizationName,
+            createdBy: user._id,
+            members: [{ user: user._id }]
+        });
+
+        // 3. Update user with organization ID
+        user.organization = organization._id;
+        await user.save();
 
         // Generate token
         const token = generateToken(user._id);
@@ -49,10 +48,15 @@ export const register = async (req, res) => {
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                organization: organization._id
+                organization: {
+                    id: organization._id,
+                    name: organization.name
+                }
             }
         });
     } catch (error) {
+        // If error occurs, cleanup created user if exists
+        console.error('Registration Error:', error);
         res.status(500).json({
             success: false,
             message: 'Server error',
